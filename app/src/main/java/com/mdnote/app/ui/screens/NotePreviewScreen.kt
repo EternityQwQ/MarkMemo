@@ -1,16 +1,19 @@
 package com.mdnote.app.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.mdnote.app.data.model.Note
+import com.mdnote.app.data.export.ExportHelper
 import com.mdnote.app.data.model.NoteCategory
 import com.mdnote.app.ui.components.MarkdownRenderer
 import com.mdnote.app.viewmodel.NoteEditViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,11 +29,37 @@ fun NotePreviewScreen(
     val title by viewModel.title.collectAsState()
     val content by viewModel.content.collectAsState()
     val category by viewModel.category.collectAsState()
+    val exportedUri by viewModel.exportedUri.collectAsState()
+    val exportType by viewModel.exportType.collectAsState()
 
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showExportMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(noteId) {
         viewModel.loadNote(noteId)
+    }
+
+    // Handle export result
+    LaunchedEffect(exportedUri, exportType) {
+        if (exportedUri != null && exportType != null) {
+            val helper = ExportHelper(context)
+            val formatName = if (exportType == "markdown") "Markdown" else "PDF"
+            val result = snackbarHostState.showSnackbar(
+                message = "$formatName 导出成功",
+                actionLabel = "分享",
+                duration = SnackbarDuration.Long
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                helper.shareFile(
+                    exportedUri!!,
+                    if (exportType == "markdown") "text/markdown" else "application/pdf"
+                )
+            }
+            viewModel.clearExportState()
+        }
     }
 
     val dateFormat = SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault())
@@ -41,6 +70,7 @@ fun NotePreviewScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -56,6 +86,9 @@ fun NotePreviewScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showExportMenu = true }) {
+                        Icon(Icons.Default.Share, contentDescription = "导出")
+                    }
                     IconButton(onClick = { onEdit(noteId) }) {
                         Icon(Icons.Default.Edit, contentDescription = "编辑")
                     }
@@ -107,6 +140,51 @@ fun NotePreviewScreen(
                     .padding(horizontal = 8.dp)
             )
         }
+    }
+
+    // Export menu
+    DropdownMenu(
+        expanded = showExportMenu,
+        onDismissRequest = { showExportMenu = false }
+    ) {
+        DropdownMenuItem(
+            text = { Text("导出 Markdown") },
+            onClick = {
+                showExportMenu = false
+                scope.launch {
+                    val note = viewModel.getCurrentNote()
+                    if (note != null) {
+                        val helper = ExportHelper(context)
+                        val uri = helper.exportMarkdown(note)
+                        viewModel.setExportedUri(uri, "markdown")
+                    } else {
+                        Toast.makeText(context, "导出失败：无法获取笔记数据", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
+            leadingIcon = {
+                Icon(Icons.Default.Code, contentDescription = null)
+            }
+        )
+        DropdownMenuItem(
+            text = { Text("导出 PDF") },
+            onClick = {
+                showExportMenu = false
+                scope.launch {
+                    val note = viewModel.getCurrentNote()
+                    if (note != null) {
+                        val helper = ExportHelper(context)
+                        val uri = helper.exportPdf(note)
+                        viewModel.setExportedUri(uri, "pdf")
+                    } else {
+                        Toast.makeText(context, "导出失败：无法获取笔记数据", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
+            leadingIcon = {
+                Icon(Icons.Default.PictureAsPdf, contentDescription = null)
+            }
+        )
     }
 
     // Delete dialog

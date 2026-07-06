@@ -26,7 +26,30 @@ class NoteEditViewModel(
     private val _isSaved = MutableStateFlow(false)
     val isSaved: StateFlow<Boolean> = _isSaved.asStateFlow()
 
+    private val _exportedUri = MutableStateFlow<android.net.Uri?>(null)
+    val exportedUri: StateFlow<android.net.Uri?> = _exportedUri.asStateFlow()
+
+    private val _exportType = MutableStateFlow<String?>(null)
+    val exportType: StateFlow<String?> = _exportType.asStateFlow()
+
     private var currentNoteId: Long? = null
+
+    /**
+     * 获取当前笔记的完整实体（用于导出）
+     */
+    suspend fun getCurrentNote(): Note? {
+        return currentNoteId?.let { repository.getNoteById(it) }
+    }
+
+    fun setExportedUri(uri: android.net.Uri?, type: String?) {
+        _exportedUri.value = uri
+        _exportType.value = type
+    }
+
+    fun clearExportState() {
+        _exportedUri.value = null
+        _exportType.value = null
+    }
 
     fun loadNote(noteId: Long) {
         currentNoteId = noteId
