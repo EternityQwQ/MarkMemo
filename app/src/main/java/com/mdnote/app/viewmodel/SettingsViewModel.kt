@@ -1,10 +1,12 @@
 package com.mdnote.app.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
+import com.mdnote.app.data.export.LogCollector
 import com.mdnote.app.data.repository.SortOrder
 import com.mdnote.app.ui.theme.ThemeMode
 import kotlinx.coroutines.flow.*
@@ -19,6 +21,8 @@ class SettingsViewModel(private val context: Context) : ViewModel() {
         val KEY_SORT_ORDER = stringPreferencesKey("sort_order")
         val KEY_DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
     }
+
+    private val logCollector = LogCollector(context)
 
     val themeMode: Flow<ThemeMode> = context.dataStore.data.map { preferences ->
         when (preferences[KEY_THEME_MODE]) {
@@ -62,5 +66,13 @@ class SettingsViewModel(private val context: Context) : ViewModel() {
         context.dataStore.edit { preferences ->
             preferences[KEY_DYNAMIC_COLOR] = enabled
         }
+    }
+
+    fun exportLogs(): Uri? {
+        return logCollector.collectAndExportLogs()
+    }
+
+    fun shareLogs(uri: Uri) {
+        logCollector.shareLogs(uri)
     }
 }

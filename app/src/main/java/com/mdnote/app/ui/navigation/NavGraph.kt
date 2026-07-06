@@ -110,6 +110,18 @@ fun NavGraph(
                 viewModel = settingsViewModel,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onNavigateToAbout = {
+                    navController.navigate(Screen.About.route)
+                }
+            )
+        }
+
+        // About
+        composable(Screen.About.route) {
+            AboutScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }

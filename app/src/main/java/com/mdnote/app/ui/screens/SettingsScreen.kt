@@ -1,5 +1,6 @@
 package com.mdnote.app.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.mdnote.app.data.repository.SortOrder
 import com.mdnote.app.ui.theme.ThemeMode
@@ -18,12 +20,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToAbout: () -> Unit
 ) {
     val themeMode by viewModel.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
     val sortOrder by viewModel.sortOrder.collectAsState(initial = SortOrder.UPDATED_DESC)
     val dynamicColor by viewModel.dynamicColor.collectAsState(initial = true)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var showThemeDialog by remember { mutableStateOf(false) }
     var showSortDialog by remember { mutableStateOf(false) }
@@ -118,6 +122,32 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
+            // Data section
+            Text(
+                text = "数据",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+            )
+
+            ListItem(
+                headlineContent = { Text("导出诊断日志") },
+                supportingContent = { Text("导出应用日志方便排查问题") },
+                leadingContent = {
+                    Icon(Icons.Default.BugReport, contentDescription = null)
+                },
+                modifier = Modifier.clickable {
+                    val uri = viewModel.exportLogs()
+                    if (uri != null) {
+                        viewModel.shareLogs(uri)
+                    } else {
+                        Toast.makeText(context, "日志导出失败，请稍后重试", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+
             // About section
             Text(
                 text = "关于",
@@ -127,11 +157,12 @@ fun SettingsScreen(
             )
 
             ListItem(
-                headlineContent = { Text("MdNote") },
+                headlineContent = { Text("关于 MdNote") },
                 supportingContent = { Text("版本 1.0.0") },
                 leadingContent = {
                     Icon(Icons.Default.Info, contentDescription = null)
-                }
+                },
+                modifier = Modifier.clickable { onNavigateToAbout() }
             )
 
             ListItem(
