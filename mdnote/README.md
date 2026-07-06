@@ -1,5 +1,7 @@
 # MdNote - Android Markdown 笔记应用
 
+[![Build Android APK](https://github.com/YOUR_USERNAME/mdnote/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/mdnote/actions/workflows/build.yml)
+
 > **本项目 100% 由 AI 驱动开发完成，无任何人工编码干预。**
 
 一款基于 Material Design 3 设计规范的 Android Markdown 笔记应用，使用 Jetpack Compose 构建，提供简洁优雅的笔记体验。
@@ -124,6 +126,7 @@ mdnote/
 | 笔记预览页 | 已完成 | Markdown 渲染、删除确认 |
 | 设置页 | 已完成 | 主题切换、排序偏好、动态取色开关 |
 | 导航系统 | 已完成 | Navigation Compose 多页面路由 |
+| CI/CD (GitHub Actions) | 已完成 | 自动构建 Debug/Release APK |
 | 测试 | 待开发 | - |
 | 导出功能 | 待开发 | Markdown / PDF 导出 |
 | 云同步 | 待开发 | - |
