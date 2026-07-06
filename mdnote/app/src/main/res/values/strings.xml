@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MdNote</string>
+    <string name="note_list_title">笔记</string>
+    <string name="search_hint">搜索笔记…</string>
+    <string name="new_note">新建笔记</string>
+    <string name="edit_note">编辑笔记</string>
+    <string name="preview">预览</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="no_notes">暂无笔记</string>
+    <string name="create_first_note">点击右下角 + 创建你的第一篇笔记</string>
+    <string name="delete_confirm_title">确认删除</string>
+    <string name="delete_confirm_message">确定要删除这篇笔记吗？此操作不可撤销。</string>
+    <string name="settings">设置</string>
+    <string name="theme">主题</string>
+    <string name="light_mode">浅色模式</string>
+    <string name="dark_mode">深色模式</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="sort_by">排序方式</string>
+    <string name="sort_updated">最近修改</string>
+    <string name="sort_created">最近创建</string>
+    <string name="sort_title">按标题</string>
+    <string name="about">关于</string>
+    <string name="about_description">MdNote - 一款简洁优雅的 Markdown 笔记应用</string>
+    <string name="note_title_hint">标题</string>
+    <string name="note_content_hint">开始书写 Markdown…</string>
+    <string name="category_work">工作</string>
+    <string name="category_personal">个人</string>
+    <string name="category_study">学习</string>
+    <string name="category_other">其他</string>
+    <string name="category_all">全部</string>
+    <string name="export">导出</string>
+    <string name="share">分享</string>
+    <string name="word_count">字数</string>
+    <string name="ai_driven">本项目完全由 AI 驱动开发</string>
+</resources>
