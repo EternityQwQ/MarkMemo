@@ -3,10 +3,13 @@ package com.mdnote.app.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -113,11 +116,12 @@ private fun renderHeading(text: String, level: Int) {
         6 -> 14.sp
         else -> 20.sp
     }
+    val primaryColor = MaterialTheme.colorScheme.primary
 
     Spacer(modifier = Modifier.height(if (level == 1) 16.dp else 8.dp))
     Text(
         text = buildAnnotatedString {
-            renderInlineMarkdown(text)
+            renderInlineMarkdown(text, primaryColor)
         },
         fontSize = fontSize,
         fontWeight = FontWeight.Bold,
@@ -128,10 +132,11 @@ private fun renderHeading(text: String, level: Int) {
 
 @Composable
 private fun renderParagraph(text: String) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Spacer(modifier = Modifier.height(4.dp))
     Text(
         text = buildAnnotatedString {
-            renderInlineMarkdown(text)
+            renderInlineMarkdown(text, primaryColor)
         },
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurface
@@ -140,11 +145,12 @@ private fun renderParagraph(text: String) {
 
 @Composable
 private fun renderListItem(text: String) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Spacer(modifier = Modifier.height(2.dp))
     Text(
         text = buildAnnotatedString {
             append("  \u2022  ")
-            renderInlineMarkdown(text)
+            renderInlineMarkdown(text, primaryColor)
         },
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurface
@@ -209,7 +215,10 @@ private fun renderHorizontalRule() {
 /**
  * 解析内联 Markdown 样式：粗体、斜体、删除线、行内代码、链接
  */
-private fun androidx.compose.ui.text.AnnotatedString.Builder.renderInlineMarkdown(text: String) {
+private fun androidx.compose.ui.text.AnnotatedString.Builder.renderInlineMarkdown(
+    text: String,
+    primaryColor: Color
+) {
     var remaining = text
     while (remaining.isNotEmpty()) {
         when {
@@ -297,7 +306,7 @@ private fun androidx.compose.ui.text.AnnotatedString.Builder.renderInlineMarkdow
                 if (bracketEnd != -1 && parenEnd != -1) {
                     withStyle(
                         SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = primaryColor,
                             textDecoration = TextDecoration.Underline
                         )
                     ) {
