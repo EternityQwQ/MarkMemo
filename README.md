@@ -77,6 +77,8 @@ mdnote/
 │       │   │   ├── db/
 │       │   │   │   ├── NoteDatabase.kt      # Room 数据库
 │       │   │   │   └── NoteDao.kt           # 数据访问层
+│       │   │   ├── export/
+│       │   │   │   └── ExportHelper.kt      # 导出工具类
 │       │   │   ├── model/
 │       │   │   │   └── Note.kt              # 笔记实体
 │       │   │   └── repository/
@@ -123,12 +125,12 @@ mdnote/
 | Markdown 渲染引擎 | 已完成 | 自研 Compose Markdown 解析器 |
 | 笔记列表页 | 已完成 | 搜索、排序、分类筛选、空状态 |
 | 笔记编辑页 | 已完成 | 标题/内容编辑、分类选择、字数统计 |
-| 笔记预览页 | 已完成 | Markdown 渲染、删除确认 |
+| 笔记预览页 | 已完成 | Markdown 渲染、删除确认、导出功能 |
 | 设置页 | 已完成 | 主题切换、排序偏好、动态取色开关 |
 | 导航系统 | 已完成 | Navigation Compose 多页面路由 |
+| 导出功能 | 已完成 | Markdown / PDF 导出，支持分享 |
 | CI/CD (GitHub Actions) | 已完成 | 自动构建 Debug/Release APK |
-| 测试 | 待开发 | - |
-| 导出功能 | 待开发 | Markdown / PDF 导出 |
+| 测试 | 已完成 | 单元测试覆盖数据层、ViewModel、模型层 |
 | 云同步 | 待开发 | - |
 
 ---
